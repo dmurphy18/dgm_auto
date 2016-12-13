@@ -1,0 +1,3 @@
+base:
+  '*':
+    - gpg_keys

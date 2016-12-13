@@ -1,0 +1,10 @@
+#!/bin/sh
+
+minion='myminion'
+
+## date tag is YearMontDayHourMinute
+curr_date=$(date +%Y%m%d%H%M)
+
+echo "${minion} state.nightlybld pillar='{ \"branch_tag\" : \"2016.11\", \"date_tag\" : \"${curr_date}\" }'"
+## $(salt ${minion} state.sls auto_setup pillar='{ \"branch_tag\" : \"2016.11\", \"date_tag\" : \"${curr_date}\" }')
+

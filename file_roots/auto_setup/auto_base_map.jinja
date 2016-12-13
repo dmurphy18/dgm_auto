@@ -1,0 +1,41 @@
+{% set build_dest = pillar.get('build_dest', '/srv/dgm/pkgs') %}
+{% set build_runas = pillar.get('build_runas', 'builder') %}
+
+# date_tag is passed on command line
+{% set date_tag = pillar.get('date_tag', '197001010001') %}
+
+# branch_tag is either branch 2016.11 or tag v2016.11.1
+# if tag then assume specifc version
+{% set branch_tag = pillar.get('branch_tag', 'develop') %}
+
+
+
+## generate build labels
+{% set curr_dev_tag = '99' %}
+
+{% if branch_tag|first == 'v' %}
+{% set build_specific_tag = True %}
+{% set build_version_dotted = branch_tag|replace("v", "", 1) %}
+{% else %}
+{% set build_specific_tag = False %}
+{% set build_version_dotted = branch_tag ~ '.' ~ curr_dev_tag %}
+{% endif %}
+
+## generate branch build version
+{% set build_version = build_version_dotted|replace(".", "_") %}
+
+
+## Get the home and gpg keys directories to use, some tools assume ~/.gnupg
+{% if build_runas == 'root' %}
+{% set build_homedir = '/' ~ build_runas %}
+{% else %}
+{% set build_homedir = '/home/' ~ build_runas %}
+{% endif %}
+
+{% set build_gpg_keydir = build_homedir ~ '/.gnupg' %}
+
+## salt code directory
+{% set build_salt_dir = build_homedir ~ '/salt_dir' %}
+
+
+
