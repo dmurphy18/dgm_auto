@@ -84,6 +84,13 @@ build_write_version_override:
         from salt.version import SaltStackVersion
         __saltstack_version__ = SaltStackVersion( 2016, 11, 0, 0, 'nb', {{base_cfg.date_tag}}, 0, None )
 
+build_salt_sdist:
+  cmd.run:
+    - name: python setup.py sdist; exit 0
+    - runas: {{base_cfg.build_runas}}
+    - cwd: {{base_cfg.build_salt_dir}}
+
+
 {% endif %}
 
 
