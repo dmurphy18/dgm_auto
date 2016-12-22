@@ -9,20 +9,21 @@
 {% set branch_tag = pillar.get('branch_tag', 'develop') %}
 
 
-
 ## generate build labels
-{% set curr_dev_tag = '99' %}
+{% set curr_dev_tag = '0' %}
 
+## generate branch build versions
 {% if branch_tag|first == 'v' %}
-{% set build_specific_tag = True %}
-{% set build_version_dotted = branch_tag|replace("v", "", 1) %}
+{% set build_specific_tag = True %}                                     ## specific version
+{% set build_version_dotted = branch_tag|replace("v", "", 1) %}         ## 2016.11.0
+{% set build_version_uscore = build_version_dotted|replace(".", "_") %} ## 2016_11_0
+{% set build_version = build_version_dotted|replace(".", "_") %}        ## 2016_11_0
 {% else %}
-{% set build_specific_tag = False %}
-{% set build_version_dotted = branch_tag ~ '.' ~ curr_dev_tag %}
+{% set build_specific_tag = False %}                                    ## branch 
+{% set build_version_dotted = branch_tag ~ '.' ~ curr_dev_tag %}        ## 2016.11.0
+{% set build_version_uscore = build_version_dotted|replace(".", "_") %} ## 2016_11_0
+{% set build_version = branch_tag|replace(".", "_") %}                  ## 2016_11
 {% endif %}
-
-## generate branch build version
-{% set build_version = build_version_dotted|replace(".", "_") %}
 
 
 ## Get the home and gpg keys directories to use, some tools assume ~/.gnupg
@@ -36,6 +37,7 @@
 
 ## salt code directory
 {% set build_salt_dir = build_homedir ~ '/salt_dir' %}
+{% set build_salt_pack_dir = build_homedir ~ '/salt_pack_dir' %}
 
 
 

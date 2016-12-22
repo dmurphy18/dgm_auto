@@ -39,6 +39,7 @@ retrieve_desired_salt:
 {% else %}
     - branch: {{base_cfg.branch_tag}}
 {% endif %}
+    - user: {{base_cfg.build_runas}}
 
 
 build_clean_patch:
@@ -56,6 +57,7 @@ build_remove_version_override:
 build_write_patch:
   file.append:
     - name: {{base_cfg.build_homedir}}/{{patch_file}}
+    - 
     - text: |
         --- a/version.py    2016-12-13 15:09:00.382911599 -0700
         +++ b/version.py    2016-12-13 15:09:19.479885298 -0700
@@ -77,6 +79,7 @@ build_apply_patch:
     - hash: md5=cdfdbe8ecdee482664c8345e1426d0b9
 
 
+## need to split the dotted version
 build_write_version_override:
   file.append:
     - name: {{uder_version_file}}
@@ -84,12 +87,24 @@ build_write_version_override:
         from salt.version import SaltStackVersion
         __saltstack_version__ = SaltStackVersion( 2016, 11, 0, 0, 'nb', {{base_cfg.date_tag}}, 0, None )
 
+
+build_write_version_override_rights:
+  module.run:
+    - name: file.chown
+    - path: {{uder_version_file}}
+    - user: {{base_cfg.build_runas}}
+    - group: {{base_cfg.build_runas}}
+    - require: 
+      - file: build_write_version_override
+
+
 build_salt_sdist:
   cmd.run:
-    - name: python setup.py sdist; exit 0
+    - name: /usr/bin/python setup.py sdist
     - runas: {{base_cfg.build_runas}}
     - cwd: {{base_cfg.build_salt_dir}}
-
+    - require:
+      - module: build_write_version_override_rights
 
 {% endif %}
 
