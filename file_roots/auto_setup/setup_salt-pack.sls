@@ -204,7 +204,7 @@ adjust_branch_curr_salt_pack_pkgbuild:
   file.replace:
     - name: {{base_cfg.build_salt_pack_dir}}/pillar_roots/pkgbuild.sls
     - pattern: tobereplaced_date
-    - repl: nb{{base_cfg.date_tag}}
+    - repl: {{base_cfg.build_version}}
     - show_changes: True
     - count: 1
 
@@ -215,5 +215,15 @@ adjust_branch_curr_salt_pack_version_pkgbuild:
     - repl: nb{{base_cfg.date_tag}}
     - show_changes: True
 
-
 {% endif %}
+
+## finally setup salt-pack files on master
+setup_salt_pack_master_pillar:
+  cmd.run:
+    - name: cp -f -R {{base_cfg.build_salt_pack_dir}}/pillar_roots/* /srv/pillar/
+
+
+setup_salt_pack_master_base:
+  cmd.run:
+    - name: cp -f -R {{base_cfg.build_salt_pack_dir}}/file_roots/* /srv/salt/
+
