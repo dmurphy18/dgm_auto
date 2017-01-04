@@ -51,104 +51,21 @@ build_cp_salt_targz_rhel7_sources:
     - user: {{base_cfg.build_runas}}
     - subdir: True
 
+{% set rpmfiles = ['salt-api', 'salt-api.service', 'salt-master', 'salt-master.service', 'salt-minion', 'salt-minion.service', 'salt-syndic', 'salt-syndic.service', 'salt.bash'] %}
 
-build_cp_salt_targz_rhel7_salt-api:
+{% for rpmfile in rpmfiles %}
+
+build_cp_salt_targz_rhel7_{{rpmfile.replace('.', '-')}}:
   file.copy:
     - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt-api
+    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/{{rpmfile}}
     - force: True
     - makedirs: True
     - preserve: True
     - user: {{base_cfg.build_runas}}
     - subdir: True
 
-
-build_cp_salt_targz_rhel7_salt-api-service:
-  file.copy:
-    - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt-api.service
-    - force: True
-    - makedirs: True
-    - preserve: True
-    - user: {{base_cfg.build_runas}}
-    - subdir: True
-
-
-build_cp_salt_targz_rhel7_salt-master:
-  file.copy:
-    - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt-master
-    - force: True
-    - makedirs: True
-    - preserve: True
-    - user: {{base_cfg.build_runas}}
-    - subdir: True
-
-
-build_cp_salt_targz_rhel7_salt-master-service:
-  file.copy:
-    - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt-master.service
-    - force: True
-    - makedirs: True
-    - preserve: True
-    - user: {{base_cfg.build_runas}}
-    - subdir: True
-
-
-build_cp_salt_targz_rhel7_salt-minion:
-  file.copy:
-    - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt-minion
-    - force: True
-    - makedirs: True
-    - preserve: True
-    - user: {{base_cfg.build_runas}}
-    - subdir: True
-
-
-build_cp_salt_targz_rhel7_salt-minion-service:
-  file.copy:
-    - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt-minion.service
-    - force: True
-    - makedirs: True
-    - preserve: True
-    - user: {{base_cfg.build_runas}}
-    - subdir: True
-
-
-build_cp_salt_targz_rhel7_salt-syndic:
-  file.copy:
-    - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt-syndic
-    - force: True
-    - makedirs: True
-    - preserve: True
-    - user: {{base_cfg.build_runas}}
-    - subdir: True
-
-
-build_cp_salt_targz_rhel7_salt-syndic-service:
-  file.copy:
-    - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt-syndic.service
-    - force: True
-    - makedirs: True
-    - preserve: True
-    - user: {{base_cfg.build_runas}}
-    - subdir: True
-
-
-build_cp_salt_targz_rhel7_salt-bash:
-  file.copy:
-    - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/pkg/rpm/salt.bash
-    - force: True
-    - makedirs: True
-    - preserve: True
-    - user: {{base_cfg.build_runas}}
-    - subdir: True
+{% endfor %}
 
 
 ## build_cp_salt_targz_rhel7_salt-fish-completions_dir:

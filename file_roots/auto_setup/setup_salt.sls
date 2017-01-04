@@ -57,7 +57,6 @@ build_remove_version_override:
 build_write_patch:
   file.append:
     - name: {{base_cfg.build_homedir}}/{{patch_file}}
-    - 
     - text: |
         --- a/version.py    2016-12-13 15:09:00.382911599 -0700
         +++ b/version.py    2016-12-13 15:09:19.479885298 -0700
@@ -94,7 +93,7 @@ build_write_version_override_rights:
     - path: {{uder_version_file}}
     - user: {{base_cfg.build_runas}}
     - group: {{base_cfg.build_runas}}
-    - require: 
+    - require:
       - file: build_write_version_override
 
 
