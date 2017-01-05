@@ -1,4 +1,4 @@
-{% import "auto_base_map.jinja" as base_cfg %}
+{% import "auto_setup/auto_base_map.jinja" as base_cfg %}
 
 ## TBD keyid needs to be changed to whatever testing keys id is
 

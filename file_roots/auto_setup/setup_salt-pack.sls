@@ -134,13 +134,54 @@ adjust_branch_curr_salt_pack_version_pkgbuild:
 
 {% endif %}
 
-## finally setup salt-pack files on master
+
+## finally setup salt-pack files on master, noting auto_setup should not get overwritten
+setup_salt_pack_master_base:
+  cmd.run:
+    - name: cp -f -R {{base_cfg.build_salt_pack_dir}}/file_roots/* /srv/salt/
+
+
 setup_salt_pack_master_pillar:
   cmd.run:
     - name: cp -f -R {{base_cfg.build_salt_pack_dir}}/pillar_roots/* /srv/pillar/
 
 
-setup_salt_pack_master_base:
-  cmd.run:
-    - name: cp -f -R {{base_cfg.build_salt_pack_dir}}/file_roots/* /srv/salt/
+adjust_salt_pack_master_pillar_top_match:
+  file.append:
+    - name: /srv/pillar/top.sls
+    - ignore_whitespace: False
+    - text: |
+
+              'G@os_family:Redhat and G@os:Amazon':
+                - auto_setup.amazon
+
+              'G@os_family:Redhat and not G@os:Amazon and G@osmajorrelease:7':
+                - auto_setup.redhat7
+
+              'G@os_family:Redhat and not G@os:Amazon and G@osmajorrelease:6':
+                - auto_setup.redhat6
+
+              'G@osfullname:Debian and G@osmajorrelease:8 and not G@osfullname:Raspbian':
+                - auto_setup.debian8
+
+              'G@osfullname:Debian and G@osmajorrelease:8 and G@osfullname:Raspbian':
+                - auto_setup.raspbian
+
+              'G@osfullname:Ubuntu and G@osmajorrelease:16':
+                - auto_setup.ubuntu16
+
+              'G@osfullname:Ubuntu and G@osmajorrelease:14':
+                - auto_setup.ubuntu14
+
+
+adjust_salt_pack_master_pillar_top_jinja:
+  file.prepend:
+    - name: /srv/pillar/top.sls
+    - text: |
+        {% raw %}
+        {% import "auto_setup/auto_base_map.jinja" as base_cfg %}
+        {% endraw %}
+        ##
+
+
 
