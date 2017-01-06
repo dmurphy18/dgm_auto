@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# ensure /srv/pillar/auto_setup/ exists
+# write pillar sls file with branch_tag and date_tag in it
+# write new top.sls file containing it, 
+# then everyone can get it from that sls file and pillar get
+
+_usage() {
+    echo "usage: $0 <branch_tag>"
+    echo "  where branch_tag is of the following format:"
+    echo "      2016.11     for HEAD of branch for specified major version"
+    echo "      v2016.11.1  for specific release version"
+    echo ""
+    echo "  creates specified packages for major platforms, signed with Salt testing keys"
+    echo "  dated by current start time of execution in YYYYMMDDhhmm format"
+    echo "  current platforms:"
+    echo "      Redhat 7 and 6"
+    echo "      Debian 8 and 7"
+    echo "      Raspbian"
+    echo "      Ubuntu 16.04 and 14.04"
+    echo ""
+    echo "  script expects node to contain salt-master with auto_setup installed and"
+    echo "  salt-minion installed on salt-master node, id 'm7m'"
+    echo ""
+}
+
+if [[ $# -ne 1 ]];then
+    _usage
+    exit 0
+fi
+
+## minion resident on Salt-Master node
+myminion='m7m'
+
+## not validating input branch tag, format v2016.11.1 or 2016.11
+BRANCH_TAG=$1
+
+## date tag is YearMontDayHourMinute
+curr_date=$(date +%Y%m%d%H%M)
+
+PILLAR_DIR='/srv/pillar'
+PILLAR_AUTO_SETUP_DIR="auto_setup"
+PILLAR_TOP_ABSFILE="${PILLAR_DIR}/top.sls"
+PILLAR_AUTO_SETUP_TAG_ABSFILE="${PILLAR_DIR}/${PILLAR_AUTO_SETUP_DIR}/tag_build_date.sls"
+PILLAR_AUTO_SETUP_TAG_SLSFILE="${PILLAR_AUTO_SETUP_DIR}.tag_build_date"
+
+if [[ ! -d "${PILLAR_DIR}/${PILLAR_AUTO_SETUP_DIR}" ]]; then
+    echo "Missing vital directory ${PILLAR_DIR}/${PILLAR_AUTO_SETUP_DIR}, ensure system is correctly setup before proceeding"
+    exit 1
+fi
+
+cat <<@EOF > "${PILLAR_AUTO_SETUP_TAG_ABSFILE}"
+branch_tag: '${BRANCH_TAG}'
+date_tag : '${curr_date}'
+@EOF
+
+cat <<@EOF > "${PILLAR_TOP_ABSFILE}"
+base:
+  '*':
+    - ${PILLAR_AUTO_SETUP_TAG_SLSFILE}
+@EOF
+
+
+## ## $(salt ${myminion} state.sls auto_setup pillar='{ \"branch_tag\" : \"2016.11\", \"date_tag\" : \"${curr_date}\" }')
+## $(salt ${myminion} state.sls auto_setup)
+salt ${myminion} saltutil.refresh_pillar
+salt ${myminion} state.sls auto_setup
+

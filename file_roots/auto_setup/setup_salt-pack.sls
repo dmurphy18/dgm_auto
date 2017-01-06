@@ -121,7 +121,7 @@ adjust_branch_curr_salt_pack_pkgbuild:
   file.replace:
     - name: {{base_cfg.build_salt_pack_dir}}/pillar_roots/pkgbuild.sls
     - pattern: tobereplaced_date
-    - repl: {{base_cfg.build_version}}
+    - repl: '{{base_cfg.build_version}}'
     - show_changes: True
     - count: 1
 
@@ -151,37 +151,31 @@ adjust_salt_pack_master_pillar_top_match:
     - name: /srv/pillar/top.sls
     - ignore_whitespace: False
     - text: |
+          ##
+              - auto_setup.tag_build_date
 
-              'G@os_family:Redhat and G@os:Amazon':
-                - auto_setup.amazon
+            'G@os_family:Redhat and G@os:Amazon':
+              - auto_setup.amazon
 
-              'G@os_family:Redhat and not G@os:Amazon and G@osmajorrelease:7':
-                - auto_setup.redhat7
+            'G@os_family:Redhat and G@osmajorrelease:7 and not G@os:Amazon':
+              - auto_setup.redhat7
 
-              'G@os_family:Redhat and not G@os:Amazon and G@osmajorrelease:6':
-                - auto_setup.redhat6
+            'G@os_family:Redhat and G@osmajorrelease:6 and not G@os:Amazon':
+              - auto_setup.redhat6
 
-              'G@osfullname:Debian and G@osmajorrelease:8 and not G@osfullname:Raspbian':
-                - auto_setup.debian8
+            'G@osfullname:Debian and G@osmajorrelease:8 and not G@osfullname:Raspbian':
+              - auto_setup.debian8
 
-              'G@osfullname:Debian and G@osmajorrelease:8 and G@osfullname:Raspbian':
-                - auto_setup.raspbian
+            'G@osfullname:Debian and G@osmajorrelease:7':
+              - auto_setup.debian7
 
-              'G@osfullname:Ubuntu and G@osmajorrelease:16':
-                - auto_setup.ubuntu16
+            'G@osfullname:Debian and G@osmajorrelease:8 and G@osfullname:Raspbian':
+              - auto_setup.raspbian
 
-              'G@osfullname:Ubuntu and G@osmajorrelease:14':
-                - auto_setup.ubuntu14
+            'G@osfullname:Ubuntu and G@osmajorrelease:16':
+              - auto_setup.ubuntu16
 
-
-adjust_salt_pack_master_pillar_top_jinja:
-  file.prepend:
-    - name: /srv/pillar/top.sls
-    - text: |
-        {% raw %}
-        {% import "auto_setup/auto_base_map.jinja" as base_cfg %}
-        {% endraw %}
-        ##
-
+            'G@osfullname:Ubuntu and G@osmajorrelease:14':
+              - auto_setup.ubuntu14
 
 
