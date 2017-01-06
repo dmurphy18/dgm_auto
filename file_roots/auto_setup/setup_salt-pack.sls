@@ -132,6 +132,17 @@ adjust_branch_curr_salt_pack_version_pkgbuild:
     - repl: nb{{base_cfg.date_tag}}
     - show_changes: True
 
+update_rhel6_from_rhel7_spec:
+  cmd.run:
+    - name: cp -R {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/spec {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel6/
+    - runas: {{base_cfg.build_runas}}
+
+
+update_rhel6_from_rhel7_sources:
+  cmd.run:
+    - name: cp -R {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel6/
+    - runas: {{base_cfg.build_runas}}
+
 {% endif %}
 
 
