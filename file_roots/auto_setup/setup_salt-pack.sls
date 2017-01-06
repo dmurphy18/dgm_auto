@@ -157,6 +157,15 @@ setup_salt_pack_master_pillar:
     - name: cp -f -R {{base_cfg.build_salt_pack_dir}}/pillar_roots/* /srv/pillar/
 
 
+adjust_salt_pack_master_pillar_top_keys:
+  file.replace:
+    - name: /srv/pillar/top.sls
+    - pattern: 'gpg_keys'
+    - repl: 'gpg_keys_test'
+    - show_changes: True
+    - count: 1
+
+
 adjust_salt_pack_master_pillar_top_match:
   file.append:
     - name: /srv/pillar/top.sls
