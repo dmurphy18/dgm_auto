@@ -1,12 +1,32 @@
 {% import "auto_setup/auto_base_map.jinja" as base_cfg %}
 
-build_rhel6_init:
-  salt.state:
-    - tgt: {{base_cfg.minion_rhel6}}
-    - sls:
-      - setup.redhat.rhel6
+{% set minion_tgt = base_cfg.minion_rhel6 %}
+{% set minion_platform = 'rhel6' %}
+{% set minion_specific = 'redhat.' ~ minion_platform %}
 
-build_rhel6_highstate:
+
+refresh_pillars_{{minion_platform}}:
+  salt.function:
+    - name: saltutil.refresh_pillar
+    - tgt: {{minion_tgt}}
+
+
+build_init_{{minion_platform}}:
   salt.state:
-    - tgt: {{base_cfg.minion_rhel6}}
+    - tgt: {{minion_tgt}}
+    - sls:
+      - setup.{{minion_specific}}
+
+
+build_highstate_{{minion_platform}}:
+  salt.state:
+    - tgt: {{minion_platform}}
     - highstate: True
+
+
+sign_packages_{{minion_platform}}:
+  salt.state:
+    - tgt: {{minion_tgt}}
+    - sls:
+      - repo.{{minion_specific}}
+

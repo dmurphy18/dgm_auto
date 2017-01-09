@@ -1,12 +1,32 @@
 {% import "auto_setup/auto_base_map.jinja" as base_cfg %}
 
-build_ubuntu1604_init:
-  salt.state:
-    - tgt: {{base_cfg.minion_ubuntu1604}}
-    - sls:
-      - setup.ubuntu.ubuntu16
+{% set minion_tgt = base_cfg.minion_ubuntu1604 %}
+{% set minion_platform = 'ubuntu1604' %}
+{% set minion_specific = 'ubuntu.' ~ minion_platform %}
 
-build_ubuntu1604_highstate:
+
+refresh_pillars_{{minion_platform}}:
+  salt.function:
+    - name: saltutil.refresh_pillar
+    - tgt: {{minion_tgt}}
+
+
+build_init_{{minion_platform}}:
   salt.state:
-    - tgt: {{base_cfg.minion_ubuntu1604}}
+    - tgt: {{minion_tgt}}
+    - sls:
+      - setup.{{minion_specific}}
+
+
+build_highstate_{{minion_platform}}:
+  salt.state:
+    - tgt: {{minion_platform}}
     - highstate: True
+
+
+sign_packages_{{minion_platform}}:
+  salt.state:
+    - tgt: {{minion_tgt}}
+    - sls:
+      - repo.{{minion_specific}}
+
