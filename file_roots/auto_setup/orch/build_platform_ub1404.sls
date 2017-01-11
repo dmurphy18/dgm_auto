@@ -1,7 +1,7 @@
 {% import "auto_setup/auto_base_map.jinja" as base_cfg %}
 
 {% set minion_tgt = base_cfg.minion_ubuntu1404 %}
-{% set minion_platform = 'ubuntu1404' %}
+{% set minion_platform = 'ubuntu14' %}
 {% set minion_specific = 'ubuntu.' ~ minion_platform %}
 
 
