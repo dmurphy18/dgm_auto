@@ -40,28 +40,27 @@ adjust_branch_curr_salt_pack_version_{{ubuntu_ver}}_init_ver:
 
 
 unpack_branch_curr_salt_pack_version_{{ubuntu_ver}}_spec:
-  archive.extracted:
-    - name: {{dir_ubuntu_base}}/spec
-    - source: {{dir_ubuntu_base}}/spec/{{spec_file_tarball}}
-    - source_hash: md5=38aac2be731f14a6a26adcd2e8829ca8
-    - cmd: {{dir_ubuntu_base}}
+  module.run:
+    - name: archive.tar
+    - tarfile: {{dir_ubuntu_base}}/spec/{{spec_file_tarball}}
+    - dest: {{dir_ubuntu_base}}/spec
+    - cwd: {{dir_ubuntu_base}}/spec
     - runas: {{base_cfg.build_runas}}
-    - overwrite: True
-
+    - options: -xvJf
 
 remove_branch_curr_salt_pack_version_{{ubuntu_ver}}_changelog:
   file.absent:
-    - name: {{dir_ubuntu_base}}/spec/ubuntu/changelog
+    - name: {{dir_ubuntu_base}}/spec/debian/changelog
 
 
 touch_branch_curr_salt_pack_version_{{ubuntu_ver}}_changelog:
   file.touch:
-    - name: {{dir_ubuntu_base}}/spec/ubuntu/changelog
+    - name: {{dir_ubuntu_base}}/spec/debian/changelog
 
 
 update_branch_curr_salt_pack_version_{{ubuntu_ver}}_changelog:
   file.append:
-    - name: {{dir_ubuntu_base}}/spec/ubuntu/changelog
+    - name: {{dir_ubuntu_base}}/spec/debian/changelog
     - ignore_whitespace: False
     - text: |
         salt ({{base_cfg.build_version_dotted}}nb{{base_cfg.date_tag}}+ds-0) stable; urgency=medium
@@ -78,7 +77,7 @@ pack_branch_curr_salt_pack_version_{{ubuntu_ver}}_spec:
      - name: archive.tar
      - tarfile: {{spec_file_tarball}}
      - dest: {{dir_ubuntu_base}}/spec
-     - sources: ubuntu
+     - sources: debian
      - cwd: {{dir_ubuntu_base}}/spec
      - runas: {{base_cfg.build_runas}}
      - options: -cvJf
@@ -86,7 +85,7 @@ pack_branch_curr_salt_pack_version_{{ubuntu_ver}}_spec:
 
 cleanup_pack_branch_curr_salt_pack_version_{{ubuntu_ver}}_spec:
   file.absent:
-    - name: {{dir_ubuntu_base}}/spec/ubuntu
+    - name: {{dir_ubuntu_base}}/spec/debian
 
 {% endfor %}
 

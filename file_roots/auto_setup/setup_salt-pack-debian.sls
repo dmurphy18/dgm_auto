@@ -40,13 +40,13 @@ adjust_branch_curr_salt_pack_version_{{debian_ver}}_init_ver:
 
 
 unpack_branch_curr_salt_pack_version_{{debian_ver}}_spec:
-  archive.extracted:
-    - name: {{dir_debian_base}}/spec
-    - source: {{dir_debian_base}}/spec/{{spec_file_tarball}}
-    - source_hash: md5=38aac2be731f14a6a26adcd2e8829ca8
-    - cmd: {{dir_debian_base}}
+  module.run:
+    - name: archive.tar
+    - tarfile: {{dir_debian_base}}/spec/{{spec_file_tarball}}
+    - dest: {{dir_debian_base}}/spec
+    - cwd: {{dir_debian_base}}/spec
     - runas: {{base_cfg.build_runas}}
-    - overwrite: True
+    - options: -xvJf
 
 
 remove_branch_curr_salt_pack_version_{{debian_ver}}_changelog:
