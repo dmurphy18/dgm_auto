@@ -10,7 +10,7 @@
 
 {% for ubuntu_ver in ubuntu_supported %}
 
-{% set dir_ubuntu_base = base_cfg.build_salt_pack_dir ~ '/file_roots/pkg/salt/' ~ base_cfg.build_version ~ '/' ~ ubuntu_ver' %}
+{% set dir_ubuntu_base = base_cfg.build_salt_pack_dir ~ '/file_roots/pkg/salt/' ~ base_cfg.build_version ~ '/' ~ ubuntu_ver %}
 
 build_cp_salt_targz_{{ubuntu_ver}}_sources:
   file.copy:
@@ -66,9 +66,9 @@ update_branch_curr_salt_pack_version_{{ubuntu_ver}}_changelog:
     - text: |
         salt ({{base_cfg.build_version_dotted}}nb{{base_cfg.date_tag}}+ds-0) stable; urgency=medium
 
-           * Build of Salt {{base_cfg.build_version_dotted}} nightly build {{base_cfg.date_tag}}
+          * Build of Salt {{base_cfg.build_version_dotted}} nb{{base_cfg.date_tag}}
 
-          -- Salt Stack Packaging <packaging@saltstack.com>  Mon,  9 Jan 2017 14:34:13 -0600
+         -- Salt Stack Packaging <packaging@saltstack.com>  Mon,  9 Jan 2017 14:34:13 -0600
     - require:
       - file: remove_branch_curr_salt_pack_version_{{ubuntu_ver}}_changelog
 
