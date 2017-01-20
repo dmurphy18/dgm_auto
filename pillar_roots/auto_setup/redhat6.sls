@@ -7,4 +7,5 @@ keyid: 4DD70950
 build_release: rhel6
 build_version: '{{base_cfg.build_version}}'
 build_arch: 'x86_64'
+build_runas: builder
 

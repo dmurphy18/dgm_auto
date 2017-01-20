@@ -44,17 +44,17 @@ build_bldressrv_basedir_exists_{{minion_platform}}:
         mode: 775
 
 
-build_highstate_{{minion_platform}}:
-  salt.state:
-    - tgt: {{minion_tgt}}
-    - highstate: True
-
-
-sign_packages_{{minion_platform}}:
-  salt.state:
-    - tgt: {{minion_tgt}}
-    - sls:
-      - repo.{{minion_specific}}
+## build_highstate_{{minion_platform}}:
+##   salt.state:
+##     - tgt: {{minion_tgt}}
+##     - highstate: True
+## 
+## 
+## sign_packages_{{minion_platform}}:
+##   salt.state:
+##     - tgt: {{minion_tgt}}
+##     - sls:
+##       - repo.{{minion_specific}}
 
 
 copy_signed_packages_{{minion_platform}}:

@@ -7,4 +7,5 @@ keyid: 4DD70950
 build_release: debian8
 build_version: '{{base_cfg.build_version}}'
 build_arch: armhf
+build_runas: root
 

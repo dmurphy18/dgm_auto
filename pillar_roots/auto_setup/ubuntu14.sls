@@ -7,4 +7,5 @@ keyid: 4DD70950
 build_release: ubuntu1404
 build_version: '{{base_cfg.build_version}}'
 build_arch: 'amd64'
+build_runas: root
 
