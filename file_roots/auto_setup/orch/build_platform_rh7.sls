@@ -2,11 +2,14 @@
 
 {% set minion_tgt = base_cfg.minion_rhel7 %}
 
+## TODO need to move this to minion to pick off build_arch correctly etc.
+{% set build_arch = 'x86_64' %}
+{% set build_dest = '/srv/redhat/' ~ base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag ~ '/pkgs' %}
+
+
 {% set os_version = '7' %}
 {% set minion_platform = 'rhel' ~ os_version %}
 {% set minion_specific = 'redhat.' ~ minion_platform %}
-{% set build_arch = pillar.get('build_arch') %}
-{% set build_dest = pillar.get('build_dest') %}
 {% set nb_srcdir = build_dest ~ '/' ~ minion_platform ~ '/' ~ build_arch %}
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
 {% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/yum/redhat/' ~ os_version ~ '/' ~ build_arch ~ '/archive/' ~ nb_destdir %}
@@ -59,9 +62,9 @@ sign_packages_{{minion_platform}}:
 
 
 copy_signed_packages_{{minion_platform}}:
-  salt.function:
-    - name: cmd.run
+  salt.state:
     - tgt: {{minion_tgt}}
-    - arg:
-      - scp -i {{base_cfg.rsa_priv_key_absfile}} -r {{nb_srcdir}}/* {{base_cfg.minion_bldressrv_username}}@{{base_cfg.minion_bldressrv_hostname}}:{{web_server_base_dir}}/
+    - sls:
+      - auto_setup.copy_build_product
+
 
