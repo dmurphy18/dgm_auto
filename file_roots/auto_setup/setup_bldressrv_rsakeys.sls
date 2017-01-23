@@ -29,7 +29,7 @@ rsa_load_pub_key:
     - user: {{base_cfg.build_runas}}
     - hostname: {{base_cfg.minion_bldressrv_hostname}}
     - key: |
-        'AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDTx2yXXXOtn3Y69WOyzZr1rH21LGe32COF1nZi00SYQEzrqJvgrbCzEmP6S6t3Gpl3klr9UVkzKV0K2RZECO+Y='
+        AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDTx2yXXXOtn3Y69WOyzZr1rH21LGe32COF1nZi00SYQEzrqJvgrbCzEmP6S6t3Gpl3klr9UVkzKV0K2RZECO+Y=
     - enc: 'ecdsa-sha2-nistp256'
     - hash_known_hosts: False
 

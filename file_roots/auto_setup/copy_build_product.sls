@@ -19,7 +19,7 @@
 {% set platform = grains.get('os_family') -%}
 {% endif %}
 
-{% elif grains.get('os_family') == 'Redhat' -%}
+{% elif grains.get('os_family') == 'RedHat' -%}
 {% set platform_pkg = 'yum' %}
 
 {% if grains.get('os') == 'Amazon' -%}
@@ -28,13 +28,15 @@
 {% set platform = grains.get('os_family') -%}
 {% endif %}
 
+{% else %}
+{% set platform_pkg = 'Unsupported platform packager' -%}
+{% set platform = 'Unsupported platform' -%}
 {% endif %}
 
 {% set platform_name = platform|lower %}
 
-
 {% set build_dest = pillar.get('build_dest') %}
-{% set nb_srcdir = build_dest ~ '/' ~ platform_name ~ os_version ~ '/' ~ build_arch %}
+{% set nb_srcdir = build_dest ~ '/' ~ platform_name ~ os_version|replace('.', '') ~ '/' ~ build_arch %}
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
 {% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/' ~ platform_pkg ~ '/' ~ platform_name ~ '/' ~ os_version ~ '/' ~ build_arch ~ '/archive/' ~ nb_destdir %}
 
@@ -66,6 +68,6 @@ copy_signed_packages:
   cmd.run:
     - name: |
         scp -i {{base_cfg.rsa_priv_key_absfile}} -r {{nb_srcdir}}/* {{base_cfg.minion_bldressrv_username}}@{{base_cfg.minion_bldressrv_hostname}}:{{web_server_base_dir}}/
-    - runas: {{base_cfg.minion_bldressrv_username}}
+    - runas: {{base_cfg.build_runas}}
 
 

@@ -9,7 +9,7 @@
 {% set build_dest = '/srv/ubuntu/' ~ base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag ~ '/pkgs' %}
 
 {% set os_version = '16.04' %}
-{% set nb_srcdir = build_dest ~ '/' ~ minion_platform ~ os_version ~ '/' ~ build_arch %}
+{% set nb_srcdir = build_dest ~ '/' ~ minion_platform ~ os_version|replace('.', '') ~ '/' ~ build_arch %}
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
 {% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/apt/ubuntu/' ~ os_version ~ '/' ~ build_arch ~ '/archive/' ~ nb_destdir %}
 
