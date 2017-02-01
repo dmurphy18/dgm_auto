@@ -1,10 +1,55 @@
-#!/bin/sh
+#!/bin/bash
 
-minion='myminion'
+_usage() {
+    echo ""
+##    echo "usage: ${0}  [-h|--help] [-m|--minion <minion_to_use>] [ [-b|--branch <branch_to_build>] | [-t|--tag <tag>] ]"
+    echo "usage: ${0}  [-h|--help] [-m|--minion <minion_to_use>] [-b|--branch <branch_to_build>]"
+    echo ""
+    echo "  -b, --branch    git branch to build, default 2016.11 branch"
+    echo "  -h, --help      this message"
+    echo "  -m. --minion    minion to use for code checkout, default 'm7m'"
+##    echo "  -t, --tag       build's tag, e.g. v2016.11.2"
+##     echo "  -v, --verbose   verbose output"
+##     echo "  -d, --debug     debug output enabled"
+##    echo "  -l, --log       logging mode"
+    echo ""
+}
 
-## date tag is YearMontDayHourMinute
-curr_date=$(date +%Y%m%d%H%M)
+VERBOSE=false
+DEBUG=false
+USAGE_HELP=false
+LOG_MODE='debug'
+RELEASE_TAG=
+RELEASE_BRANCH='2016.11'
+CODE_MINION='m7m'
 
-echo "${minion} state.nightlybld pillar='{ \"branch_tag\" : \"2016.11\", \"date_tag\" : \"${curr_date}\" }'"
-## $(salt ${minion} state.sls auto_setup pillar='{ \"branch_tag\" : \"2016.11\", \"date_tag\" : \"${curr_date}\" }')
+##    -v | --verbose ) VERBOSE=true; shift ;;
+##    -d | --debug )  DEBUG=true; shift ;;
+##    -l | --log )  LOG_MODE="$2"; shift 2 ;;
+##    -t | --tag ) RELEASE_TAG="$2"; shift 2 ;;
+
+while true; do
+  case "${1}" in
+    -b | --branch ) RELEASE_BRANCH="$2"; shift 2 ;;
+    -h | --help ) USAGE_HELP=true; shift ;;
+    -m | --minion ) CODE_MINION="$2"; shift 2 ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+## check if want help, display usage and exit
+[[ ${USAGE_HELP} = 'false' ]] || {
+  _usage
+  exit 0
+}
+
+##  MAIN BODY OF SCRIPT
+
+## date tag is YearMontDayHourMinuteSecondMicrosecond aka jid
+date_long=$(date +%Y%m%d%H%M%S%N)
+curr_date="${date_long::-2}"
+
+echo "${CODE_MINION} state.nightlybld pillar='{ \"branch_tag\" : \"${RELEASE_BRANCH}\", \"date_tag\" : \"${curr_date}\" }'"
+$(salt ${CODE_MINION} state.sls auto_setup pillar='{ \"branch_tag\" : \"${RELEASE_BRANCH}\", \"date_tag\" : \"${curr_date}\" }')
 
