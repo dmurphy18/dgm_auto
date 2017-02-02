@@ -28,6 +28,7 @@ adjust_salt_pack_master_pillar_top_match:
     - text: |
           ##
               - auto_setup.tag_build_date
+              - auto_setup.bld_res_server_key
 
             'G@os_family:Redhat and G@os:Amazon':
               - auto_setup.amazon
