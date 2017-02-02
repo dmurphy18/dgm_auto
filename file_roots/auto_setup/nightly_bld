@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # ensure /srv/pillar/auto_setup/ exists
 # write pillar sls file with branch_tag and date_tag in it
@@ -6,10 +6,17 @@
 # then everyone can get it from that sls file and pillar get
 
 _usage() {
-    echo "usage: $0 <branch_tag>"
-    echo "  where branch_tag is of the following format:"
-    echo "      2016.11     for HEAD of branch for specified major version"
-    echo "      v2016.11.1  for specific release version"
+    echo ""
+##    echo "usage: ${0}  [-h|--help] [-m|--minion <minion_to_use>] [ [-b|--branch <branch_to_build>] | [-t|--tag <tag>] ]"
+    echo "usage: ${0}  [-h|--help] [-m|--minion <minion_to_use>] [-b|--branch <branch_to_build>]"
+    echo ""
+    echo "  -b, --branch    git HEAD of branch for specified major version, default 2016.11"
+    echo "  -h, --help      this message"
+    echo "  -m. --minion    salt-minion installed on salt-master node to use for code checkout, default 'm7m'"
+##    echo "  -t, --tag       build's tag, e.g. v2016.11.1  for specific release version"
+##     echo "  -v, --verbose   verbose output"
+##     echo "  -d, --debug     debug output enabled"
+##    echo "  -l, --log       logging mode"
     echo ""
     echo "  creates specified packages for major platforms, signed with Salt testing keys"
     echo "  dated by current start time of execution in YYYYMMDDhhmm format"
@@ -24,19 +31,51 @@ _usage() {
     echo ""
 }
 
-if [[ $# -ne 1 ]];then
-    _usage
-    exit 0
-fi
+vERBOSE=false
+DEBUG=false
+USAGE_HELP=false
+LOG_MODE='debug'
+RELEASE_TAG=''
+RELEASE_BRANCH='2016.11'
 
 ## minion resident on Salt-Master node
-myminion='m7m'
+CODE_MINION='m7m'
+
+##    -v | --verbose ) VERBOSE=true; shift ;;
+##    -d | --debug )  DEBUG=true; shift ;;
+##    -l | --log )  LOG_MODE="$2"; shift 2 ;;
+##    -t | --tag ) RELEASE_TAG="$2"; shift 2 ;;
 
 ## not validating input branch tag, format v2016.11.1 or 2016.11
-BRANCH_TAG=$1
+BRANCH_TAG=''
 
-## date tag is YearMontDayHourMinute
-curr_date=$(date +%Y%m%d%H%M)
+while true; do
+  case "${1}" in
+    -b | --branch ) RELEASE_BRANCH="$2"; shift 2 ;;
+    -h | --help ) USAGE_HELP=true; shift ;;
+    -m | --minion ) CODE_MINION="$2"; shift 2 ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+## check if want help, display usage and exit
+[[ ${USAGE_HELP} = 'false' ]] || {
+  _usage
+  exit 0
+}
+
+
+## input version tag overrides use of branch if present
+[[ -z "${RELEASE_TAG}" ]] && BRANCH_TAG="${RELEASE_BRANCH}" || BRANCH_TAG="${RELEASE_TAG}"
+
+
+
+##  MAIN BODY OF SCRIPT
+
+## date tag is YearMontDayHourMinuteSecondMicrosecond aka jid
+date_long=$(date +%Y%m%d%H%M%S%N)
+curr_date="${date_long::-2}"
 
 PILLAR_DIR='/srv/pillar'
 PILLAR_AUTO_SETUP_DIR="auto_setup"
@@ -53,8 +92,6 @@ cat <<@EOF > "${PILLAR_AUTO_SETUP_TAG_ABSFILE}"
 @EOF
 
 
-## ## $(salt ${myminion} state.sls auto_setup pillar='{ \"branch_tag\" : \"2016.11\", \"date_tag\" : \"${curr_date}\" }')
-## $(salt ${myminion} state.sls auto_setup)
-salt ${myminion} saltutil.refresh_pillar
-salt ${myminion} state.sls auto_setup
+salt ${CODE_MINION} saltutil.refresh_pillar
+salt ${CODE_MINION} state.sls auto_setup
 
