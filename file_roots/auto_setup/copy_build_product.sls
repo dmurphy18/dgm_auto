@@ -34,9 +34,10 @@
 {% endif %}
 
 {% set platform_name = platform|lower %}
+{% set build_release = pillar.get('build_release') %}
 
 {% set build_dest = pillar.get('build_dest') %}
-{% set nb_srcdir = build_dest ~ '/' ~ platform_name ~ os_version|replace('.', '') ~ '/' ~ build_arch %}
+{% set nb_srcdir = build_dest ~ '/' ~ build_release ~ '/' ~ build_arch %}
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
 {% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/' ~ platform_pkg ~ '/' ~ platform_name ~ '/' ~ os_version ~ '/' ~ build_arch ~ '/archive/' ~ nb_destdir %}
 

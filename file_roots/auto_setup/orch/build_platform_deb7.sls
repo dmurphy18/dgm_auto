@@ -9,7 +9,6 @@
 {% set os_version = '7' %}
 {% set minion_platform = 'debian' ~ os_version %}
 {% set minion_specific = 'debian.' ~ minion_platform %}
-{% set nb_srcdir = build_dest ~ '/' ~ minion_platform ~ '/' ~ build_arch %}
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
 {% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/apt/debian/' ~ os_version ~ '/' ~ build_arch ~ '/archive/' ~ nb_destdir %}
 
