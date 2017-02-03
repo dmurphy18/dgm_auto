@@ -1,17 +1,18 @@
 {% import "auto_setup/auto_base_map.jinja" as base_cfg %}
 
 {% set minion_tgt = base_cfg.minion_amzn %}
-{% set minion_platform = 'amzn' %}
-{% set minion_specific = 'amazon.' ~ minion_platform %}
-
 
 ## TODO need to move this to minion to pick off build_arch correctly etc.
-{% set build_arch = 'x86_64' %}
-{% set build_dest = '/srv/amazon/' ~ base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag ~ '/pkgs' %}
-
+{% set os_family = 'amazon' %}
 {% set os_version = 'latest' %}
+{% set build_arch = 'x86_64' %}
+
+{% set minion_platform = 'amzn' %}
+{% set minion_specific = os_family ~ '.' ~ minion_platform %}
+
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
-{% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/yum/amazon/' ~ os_version ~ '/' ~ build_arch ~ '/archive/' ~ nb_destdir %}
+{% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/yum/' ~ os_family ~ '/' ~ os_version ~ '/' ~ build_arch %}
+{% set web_server_archive_dir = web_server_base_dir ~ '/archive/' ~ nb_destdir %}
 
 
 refresh_pillars_{{minion_platform}}:
@@ -39,7 +40,7 @@ build_bldressrv_basedir_exists_{{minion_platform}}:
     - name: file.makedirs
     - tgt: {{base_cfg.minion_bldressrv}}
     - arg:
-      - {{web_server_base_dir}}/
+      - {{web_server_archive_dir}}/
     - kwarg:
         user: {{base_cfg.minion_bldressrv_username}}
         group: www-data
@@ -64,4 +65,31 @@ copy_signed_packages_{{minion_platform}}:
     - tgt: {{minion_tgt}}
     - sls:
       - auto_setup.copy_build_product
+
+
+remove_current_latest_{{minion_platform}}:
+  salt.function:
+    - name: file.remove
+    - tgt: {{base_cfg.minion_bldressrv}}
+    - arg:
+      - {{web_server_archive_dir}}/latest
+
+
+update_current_latest_{{minion_platform}}:
+ salt.function:
+   - name:  file.symlink
+   - tgt: {{base_cfg.minion_bldressrv}}
+   - arg:
+     - {{web_server_archive_dir}}
+     - {{web_server_archive_dir}}/latest
+
+
+update_current_latest_mode_{{minion_platform}}:
+ salt.function:
+   - name:  file.lchown
+   - tgt: {{base_cfg.minion_bldressrv}}
+   - arg:
+     - {{web_server_archive_dir}}/latest
+     - {{base_cfg.minion_bldressrv_username}}
+     - www-data
 

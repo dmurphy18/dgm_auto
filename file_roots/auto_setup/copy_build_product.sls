@@ -35,11 +35,11 @@
 
 {% set platform_name = platform|lower %}
 {% set build_release = pillar.get('build_release') %}
-
 {% set build_dest = pillar.get('build_dest') %}
 {% set nb_srcdir = build_dest ~ '/' ~ build_release ~ '/' ~ build_arch %}
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
-{% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/' ~ platform_pkg ~ '/' ~ platform_name ~ '/' ~ os_version ~ '/' ~ build_arch ~ '/archive/' ~ nb_destdir %}
+{% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/' ~ platform_pkg ~ '/' ~ platform_name ~ '/' ~ os_version ~ '/' ~ build_arch %}
+{% set web_server_archive_dir = web_server_base_dir ~ '/archive/' ~ nb_destdir %}
 
 
 ## TODO need to figure way to pass pillar data to via publish.publish
@@ -53,22 +53,21 @@
 ##         auto_setup.verify_path
 ##     - kwargs:
 ##       - context:
-##         base_path: {{web_server_base_dir}}
+##         base_path: {{web_server_archive_dir}}
 ##         user: {{base_cfg.build_runas}}
 ##         template: True
 ## 
-##        salt://auto_setup/verify_path pillar='{ "base_path":"{{web_server_base_dir}}/"\, "user":"{{base_cfg.build_runas}}" }'
+##        salt://auto_setup/verify_path pillar='{ "base_path":"{{web_server_archive_dir}}/"\, "user":"{{base_cfg.build_runas}}" }'
 ## 
 ##    - kwargs:
 ##        pillar:
-##            base_path: {{web_server_base_dir}}/
+##            base_path: {{web_server_archive_dir}}/
 ##            user: {{base_cfg.minion_bldressrv_username}}
 ##
 
 copy_signed_packages:
   cmd.run:
     - name: |
-        scp -i {{base_cfg.rsa_priv_key_absfile}} -r {{nb_srcdir}}/* {{base_cfg.minion_bldressrv_username}}@{{base_cfg.minion_bldressrv_hostname}}:{{web_server_base_dir}}/
+        scp -i {{base_cfg.rsa_priv_key_absfile}} -r {{nb_srcdir}}/* {{base_cfg.minion_bldressrv_username}}@{{base_cfg.minion_bldressrv_hostname}}:{{web_server_archive_dir}}/
     - runas: {{base_cfg.build_runas}}
-
 

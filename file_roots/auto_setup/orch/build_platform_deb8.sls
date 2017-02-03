@@ -3,14 +3,16 @@
 {% set minion_tgt = base_cfg.minion_debian8 %}
 
 ## TODO need to move this to minion to pick off build_arch correctly etc.
-{% set build_arch = 'amd64' %}
-{% set build_dest = '/srv/debian/' ~ base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag ~ '/pkgs' %}
-
+{% set os_family = 'debian' %}
 {% set os_version = '8' %}
-{% set minion_platform = 'debian' ~ os_version %}
-{% set minion_specific = 'debian.' ~ minion_platform %}
+{% set build_arch = 'amd64' %}
+
+{% set minion_platform = os_family ~ os_version %}
+{% set minion_specific = os_family ~ '.' ~ minion_platform %}
+
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
-{% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/apt/debian/' ~ os_version ~ '/' ~ build_arch ~ '/archive/' ~ nb_destdir %}
+{% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/apt/' ~ os_family ~ '/' ~ os_version ~ '/' ~ build_arch %}
+{% set web_server_archive_dir = web_server_base_dir ~ '/archive/' ~ nb_destdir %}
 
 
 refresh_pillars_{{minion_platform}}:
@@ -38,7 +40,7 @@ build_bldressrv_basedir_exists_{{minion_platform}}:
     - name: file.makedirs
     - tgt: {{base_cfg.minion_bldressrv}}
     - arg:
-      - {{web_server_base_dir}}/
+      - {{web_server_archive_dir}}/
     - kwarg:
         user: {{base_cfg.minion_bldressrv_username}}
         group: www-data
@@ -64,4 +66,30 @@ copy_signed_packages_{{minion_platform}}:
     - sls:
       - auto_setup.copy_build_product
 
+
+remove_current_latest_{{minion_platform}}:
+  salt.function:
+    - name: file.remove
+    - tgt: {{base_cfg.minion_bldressrv}}
+    - arg:
+      - {{web_server_archive_dir}}/latest
+
+
+update_current_latest_{{minion_platform}}:
+ salt.function:
+   - name:  file.symlink
+   - tgt: {{base_cfg.minion_bldressrv}}
+   - arg:
+     - {{web_server_archive_dir}}
+     - {{web_server_archive_dir}}/latest
+
+
+update_current_latest_mode_{{minion_platform}}:
+ salt.function:
+   - name:  file.lchown
+   - tgt: {{base_cfg.minion_bldressrv}}
+   - arg:
+     - {{web_server_archive_dir}}/latest
+     - {{base_cfg.minion_bldressrv_username}}
+     - www-data
 
