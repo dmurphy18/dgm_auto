@@ -72,7 +72,7 @@ remove_current_latest_{{minion_platform}}:
     - name: file.remove
     - tgt: {{base_cfg.minion_bldressrv}}
     - arg:
-      - {{web_server_archive_dir}}/latest
+      - {{web_server_base_dir}}/latest
 
 
 update_current_latest_{{minion_platform}}:
@@ -81,7 +81,7 @@ update_current_latest_{{minion_platform}}:
    - tgt: {{base_cfg.minion_bldressrv}}
    - arg:
      - {{web_server_archive_dir}}
-     - {{web_server_archive_dir}}/latest
+     - {{web_server_base_dir}}/latest
 
 
 update_current_latest_mode_{{minion_platform}}:
@@ -89,8 +89,7 @@ update_current_latest_mode_{{minion_platform}}:
    - name:  file.lchown
    - tgt: {{base_cfg.minion_bldressrv}}
    - arg:
-     - {{web_server_archive_dir}}/latest
+     - {{web_server_base_dir}}/latest
      - {{base_cfg.minion_bldressrv_username}}
      - www-data
-
 

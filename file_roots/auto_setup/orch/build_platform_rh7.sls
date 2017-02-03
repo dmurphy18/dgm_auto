@@ -60,13 +60,6 @@ sign_packages_{{minion_platform}}:
       - repo.{{minion_specific}}
 
 
-copy_signed_packages_{{minion_platform}}:
-  salt.state:
-    - tgt: {{minion_tgt}}
-    - sls:
-      - auto_setup.copy_build_product
-
-
 remove_current_latest_{{minion_platform}}:
   salt.function:
     - name: file.remove
@@ -92,5 +85,11 @@ update_current_latest_mode_{{minion_platform}}:
      - {{web_server_base_dir}}/latest
      - {{base_cfg.minion_bldressrv_username}}
      - www-data
+
+copy_signed_packages_{{minion_platform}}:
+  salt.state:
+    - tgt: {{minion_tgt}}
+    - sls:
+      - auto_setup.copy_build_product
 
 
