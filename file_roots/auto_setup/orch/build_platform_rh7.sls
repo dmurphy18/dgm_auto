@@ -58,6 +58,8 @@ sign_packages_{{minion_platform}}:
     - tgt: {{minion_tgt}}
     - sls:
       - repo.{{minion_specific}}
+    - require:
+      - salt: build_highstate_{{minion_platform}}
 
 
 remove_current_{{base_cfg.build_version}}_{{minion_platform}}:
@@ -66,6 +68,8 @@ remove_current_{{base_cfg.build_version}}_{{minion_platform}}:
     - tgt: {{base_cfg.minion_bldressrv}}
     - arg:
       - {{web_server_base_dir}}/{{base_cfg.build_version}}
+    - require:
+      - salt: sign_packages_{{minion_platform}}
 
 
 update_current_{{base_cfg.build_version}}_{{minion_platform}}:
@@ -85,6 +89,7 @@ update_current_{{base_cfg.build_version}}_mode_{{minion_platform}}:
      - {{web_server_base_dir}}/{{base_cfg.build_version}}
      - {{base_cfg.minion_bldressrv_username}}
      - www-data
+
 
 copy_signed_packages_{{minion_platform}}:
   salt.state:
