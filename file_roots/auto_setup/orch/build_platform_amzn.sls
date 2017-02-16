@@ -56,6 +56,7 @@ build_highstate_{{minion_platform}}:
 sign_packages_{{minion_platform}}:
   salt.state:
     - tgt: {{minion_tgt}}
+    - queue: True
     - sls:
       - repo.{{minion_specific}}
     - require:
@@ -94,7 +95,13 @@ update_current_{{base_cfg.build_version}}_mode_{{minion_platform}}:
 copy_signed_packages_{{minion_platform}}:
   salt.state:
     - tgt: {{minion_tgt}}
+      - auto_setup.copy_build_product
+    - queue: True
     - sls:
       - auto_setup.copy_build_product
+    - require:
+      - salt: sign_packages_{{minion_platform}}
+      - salt: update_current_{{base_cfg.build_version}}_mode_{{minion_platform}}
+
 
 

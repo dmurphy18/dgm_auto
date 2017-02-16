@@ -146,11 +146,11 @@ _display "$SCRIPTNAME: nightly build started"
 
 
 salt ${CODE_MINION} saltutil.refresh_pillar || {
-    error "$SCRIPTNAME: refresh pillar for ${BRANCH_TAG}, retcode '${$?}'";
+    _error "$SCRIPTNAME: refresh pillar for ${BRANCH_TAG}, retcode '${$?}'";
 }
 
 salt ${CODE_MINION} state.sls auto_setup || {
-    error "$SCRIPTNAME:state for auto_setup failed to function for ${BRANCH_TAG}, retcode '${$?}'";
+    _error "$SCRIPTNAME:state for auto_setup failed to function for ${BRANCH_TAG}, retcode '${$?}'";
 }
 
 _display "$SCRIPTNAME: nightly build checked out and modified salt from '${BRANCH_TAG} and about to build via orchstration"
@@ -160,23 +160,23 @@ _display "$SCRIPTNAME: nightly build checked out and modified salt from '${BRANC
 ## salt-run --async state.orchestrate auto_setup.orch.build_platform_ub1604
 
 salt-run state.orchestrate auto_setup.orch.build_platform_rh7 || {
-    error "$SCRIPTNAME:orch for build_platform_rh7 failed to build ${BRANCH_TAG}, retcode '${$?}'";
+    _error "$SCRIPTNAME:orch for build_platform_rh7 failed to build ${BRANCH_TAG}, retcode '${$?}'";
 }
 
 salt-run state.orchestrate auto_setup.orch.build_platform_deb8 || {
-    error "$SCRIPTNAME:orch for build_platform_deb8 failed to build ${BRANCH_TAG}, retcode '${$?}'";
+    _error "$SCRIPTNAME:orch for build_platform_deb8 failed to build ${BRANCH_TAG}, retcode '${$?}'";
 }
 
 salt-run state.orchestrate auto_setup.orch.build_platform_deb7 || {
-    error "$SCRIPTNAME:orch for build_platform_deb7 failed to build ${BRANCH_TAG}, retcode '${$?}'";
+    _error "$SCRIPTNAME:orch for build_platform_deb7 failed to build ${BRANCH_TAG}, retcode '${$?}'";
 }
 
 salt-run state.orchestrate auto_setup.orch.build_platform_ub1604 || {
-    error "$SCRIPTNAME:orch for build_platform_ub1604 failed to build ${BRANCH_TAG}, retcode '${$?}'";
+    _error "$SCRIPTNAME:orch for build_platform_ub1604 failed to build ${BRANCH_TAG}, retcode '${$?}'";
 }
 
 salt-run state.orchestrate auto_setup.orch.build_platform_ub1404 || {
-    error "$SCRIPTNAME:orch for build_platform_ub1404 failed to build ${BRANCH_TAG}, retcode '${$?}'";
+    _error "$SCRIPTNAME:orch for build_platform_ub1404 failed to build ${BRANCH_TAG}, retcode '${$?}'";
 }
 
 _display "$SCRIPTNAME: nightly build finished"
