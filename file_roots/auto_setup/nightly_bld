@@ -159,25 +159,40 @@ _display "$SCRIPTNAME: nightly build checked out and modified salt from '${BRANC
 ## salt-run --async state.orchestrate auto_setup.orch.build_platform_deb8
 ## salt-run --async state.orchestrate auto_setup.orch.build_platform_ub1604
 
+_display "$SCRIPTNAME: nightly build via orchstration started for modified salt from '${BRANCH_TAG} on Redhat 7"
 salt-run state.orchestrate auto_setup.orch.build_platform_rh7 || {
     _error "$SCRIPTNAME:orch for build_platform_rh7 failed to build ${BRANCH_TAG}, retcode '${$?}'";
 }
+_display "$SCRIPTNAME: nightly build via orchstration finished for modified salt from '${BRANCH_TAG} on Redhat 7"
 
+
+_display "$SCRIPTNAME: nightly build via orchstration started for modified salt from '${BRANCH_TAG} on Debian 8"
 salt-run state.orchestrate auto_setup.orch.build_platform_deb8 || {
     _error "$SCRIPTNAME:orch for build_platform_deb8 failed to build ${BRANCH_TAG}, retcode '${$?}'";
 }
+_display "$SCRIPTNAME: nightly build via orchstration finished for modified salt from '${BRANCH_TAG} on Debian 8"
 
-salt-run state.orchestrate auto_setup.orch.build_platform_deb7 || {
-    _error "$SCRIPTNAME:orch for build_platform_deb7 failed to build ${BRANCH_TAG}, retcode '${$?}'";
-}
 
-salt-run state.orchestrate auto_setup.orch.build_platform_ub1604 || {
-    _error "$SCRIPTNAME:orch for build_platform_ub1604 failed to build ${BRANCH_TAG}, retcode '${$?}'";
-}
+## _display "$SCRIPTNAME: nightly build via orchstration started for modified salt from '${BRANCH_TAG} on Debian 7"
+## salt-run state.orchestrate auto_setup.orch.build_platform_deb7 || {
+##     _error "$SCRIPTNAME:orch for build_platform_deb7 failed to build ${BRANCH_TAG}, retcode '${$?}'";
+## }
+## _display "$SCRIPTNAME: nightly build via orchstration finished for modified salt from '${BRANCH_TAG} on Debian 7"
+## 
+## 
+## ## _display "$SCRIPTNAME: nightly build via orchstration started for modified salt from '${BRANCH_TAG} on Ubuntu 16.04"
+## ## salt-run state.orchestrate auto_setup.orch.build_platform_ub1604 || {
+## ##     _error "$SCRIPTNAME:orch for build_platform_ub1604 failed to build ${BRANCH_TAG}, retcode '${$?}'";
+## ## }
+## ## _display "$SCRIPTNAME: nightly build via orchstration finished for modified salt from '${BRANCH_TAG} on Ubuntu 16.04"
 
+
+_display "$SCRIPTNAME: nightly build via orchstration started for modified salt from '${BRANCH_TAG} on Ubuntu 14.04"
 salt-run state.orchestrate auto_setup.orch.build_platform_ub1404 || {
     _error "$SCRIPTNAME:orch for build_platform_ub1404 failed to build ${BRANCH_TAG}, retcode '${$?}'";
 }
+_display "$SCRIPTNAME: nightly build via orchstration finished for modified salt from '${BRANCH_TAG} on Ubuntu 14.04"
+
 
 _display "$SCRIPTNAME: nightly build finished"
 
