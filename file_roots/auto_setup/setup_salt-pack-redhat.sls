@@ -8,7 +8,7 @@
 build_cp_salt_targz_rhel7_sources:
   file.copy:
     - name: {{base_cfg.build_salt_pack_dir}}/file_roots/pkg/salt/{{base_cfg.build_version}}/rhel7/sources
-    - source: {{base_cfg.build_salt_dir}}/dist/salt-{{base_cfg.build_version_dotted}}nb{{base_cfg.date_tag}}.tar.gz
+    - source: {{base_cfg.build_salt_dir}}/dist/salt-{{base_cfg.build_version_full_dotted}}nb{{base_cfg.date_tag}}.tar.gz
     - force: True
     - makedirs: True
     - preserve: True

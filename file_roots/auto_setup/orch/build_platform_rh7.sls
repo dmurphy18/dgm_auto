@@ -68,7 +68,7 @@ remove_current_{{base_cfg.build_version}}_{{minion_platform}}:
     - name: file.remove
     - tgt: {{base_cfg.minion_bldressrv}}
     - arg:
-      - {{web_server_base_dir}}/{{base_cfg.build_version}}
+      - {{web_server_base_dir}}/{{base_cfg.build_version_dotted}}
     - require:
       - salt: sign_packages_{{minion_platform}}
 
@@ -79,7 +79,7 @@ update_current_{{base_cfg.build_version}}_{{minion_platform}}:
    - tgt: {{base_cfg.minion_bldressrv}}
    - arg:
      - {{web_server_archive_dir}}
-     - {{web_server_base_dir}}/{{base_cfg.build_version}}
+     - {{web_server_base_dir}}/{{base_cfg.build_version_dotted}}
 
 
 update_current_{{base_cfg.build_version}}_mode_{{minion_platform}}:
@@ -87,7 +87,7 @@ update_current_{{base_cfg.build_version}}_mode_{{minion_platform}}:
    - name:  file.lchown
    - tgt: {{base_cfg.minion_bldressrv}}
    - arg:
-     - {{web_server_base_dir}}/{{base_cfg.build_version}}
+     - {{web_server_base_dir}}/{{base_cfg.build_version_dotted}}
      - {{base_cfg.minion_bldressrv_username}}
      - www-data
 

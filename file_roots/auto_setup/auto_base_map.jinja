@@ -13,16 +13,19 @@
 
 ## generate branch build versions
 {% if branch_tag|first == 'v' %}
-{% set build_specific_tag = True %}                                     ## specific version
-{% set build_version_dotted = branch_tag|replace("v", "", 1) %}         ## 2016.11.0
-{% set build_version_uscore = build_version_dotted|replace(".", "_") %} ## 2016_11_0
-{% set build_version = build_version_dotted|replace(".", "_") %}        ## 2016_11_0
+{% set build_specific_tag = True %}                                                 ## specific version
+{% set build_version_full_dotted = branch_tag|replace("v", "", 1) %}                ## 2016.11.0
+{% set build_version_full_uscore = build_version_full_dotted|replace(".", "_") %}   ## 2016_11_0
+{% set build_version = build_version_full_dotted|replace(".", "_") %}               ## 2016_11_0
 {% else %}
-{% set build_specific_tag = False %}                                    ## branch
-{% set build_version_dotted = branch_tag ~ '.' ~ curr_dev_tag %}        ## 2016.11.0
-{% set build_version_uscore = build_version_dotted|replace(".", "_") %} ## 2016_11_0
-{% set build_version = branch_tag|replace(".", "_") %}                  ## 2016_11
+{% set build_specific_tag = False %}                                                ## branch
+{% set build_version_full_dotted = branch_tag ~ '.' ~ curr_dev_tag %}               ## 2016.11.0
+{% set build_version_full_uscore = build_version_full_dotted|replace(".", "_") %}   ## 2016_11_0
+{% set build_version = branch_tag|replace(".", "_") %}                              ## 2016_11
 {% endif %}
+
+## produce dotted build version regardless of branch_tag
+{% set build_version_dotted = build_version|replace("_", ".") %}    ## 2016.11 or 2016.11.0
 
 
 ## Get the home and gpg keys directories to use, some tools assume ~/.gnupg

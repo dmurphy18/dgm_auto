@@ -14,8 +14,8 @@
 
 build_cp_salt_targz_{{debian_ver}}_sources:
   file.copy:
-    - name: {{dir_debian_base}}/sources/salt-{{base_cfg.build_version_dotted}}nb{{base_cfg.date_tag}}.tar.gz
-    - source: {{base_cfg.build_salt_dir}}/dist/salt-{{base_cfg.build_version_dotted}}nb{{base_cfg.date_tag}}.tar.gz
+    - name: {{dir_debian_base}}/sources/salt-{{base_cfg.build_version_full_dotted}}nb{{base_cfg.date_tag}}.tar.gz
+    - source: {{base_cfg.build_salt_dir}}/dist/salt-{{base_cfg.build_version_full_dotted}}nb{{base_cfg.date_tag}}.tar.gz
     - force: True
     - makedirs: True
     - preserve: True
@@ -35,7 +35,7 @@ adjust_branch_curr_salt_pack_version_{{debian_ver}}_init_ver:
   file.replace:
     - name: {{dir_debian_base}}/init.sls
     - pattern: tobereplaced_ver
-    - repl: {{base_cfg.build_version_dotted}}
+    - repl: {{base_cfg.build_version_full_dotted}}
     - show_changes: True
 
 
@@ -64,9 +64,9 @@ update_branch_curr_salt_pack_version_{{debian_ver}}_changelog:
     - name: {{dir_debian_base}}/spec/debian/changelog
     - ignore_whitespace: False
     - text: |
-        salt ({{base_cfg.build_version_dotted}}nb{{base_cfg.date_tag}}+ds-0) stable; urgency=medium
+        salt ({{base_cfg.build_version_full_dotted}}nb{{base_cfg.date_tag}}+ds-0) stable; urgency=medium
 
-          * Build of Salt {{base_cfg.build_version_dotted}} nb{{base_cfg.date_tag}}
+          * Build of Salt {{base_cfg.build_version_full_dotted}}nb{{base_cfg.date_tag}}
 
          -- Salt Stack Packaging <packaging@saltstack.com>  Mon,  9 Jan 2017 14:34:13 -0600
     - require:
