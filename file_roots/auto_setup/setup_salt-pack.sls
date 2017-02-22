@@ -30,10 +30,11 @@ build_create_salt_pack_dir:
 
 ##    - name: https://github.com/saltstack/salt-pack.git
 ##    - name: https://github.com/dmurphy18/salt-pack.git
+##    - rev: auto_spack
 retrieve_desired_salt_pack:
   git.latest:
     - name: https://github.com/saltstack/salt-pack.git
-    - rev: auto_spack
+    - rev: develop
     - target: {{base_cfg.build_salt_pack_dir}}
     - user: {{base_cfg.build_runas}}
 

@@ -187,11 +187,11 @@ _display "$SCRIPTNAME: nightly build via orchstration finished for modified salt
 ## ## _display "$SCRIPTNAME: nightly build via orchstration finished for modified salt from '${BRANCH_TAG} on Ubuntu 16.04"
 
 
-_display "$SCRIPTNAME: nightly build via orchstration started for modified salt from '${BRANCH_TAG} on Ubuntu 14.04"
-salt-run state.orchestrate auto_setup.orch.build_platform_ub1404 || {
-    _error "$SCRIPTNAME:orch for build_platform_ub1404 failed to build ${BRANCH_TAG}, retcode '${$?}'";
-}
-_display "$SCRIPTNAME: nightly build via orchstration finished for modified salt from '${BRANCH_TAG} on Ubuntu 14.04"
+## _display "$SCRIPTNAME: nightly build via orchstration started for modified salt from '${BRANCH_TAG} on Ubuntu 14.04"
+## salt-run state.orchestrate auto_setup.orch.build_platform_ub1404 || {
+##     _error "$SCRIPTNAME:orch for build_platform_ub1404 failed to build ${BRANCH_TAG}, retcode '${$?}'";
+## }
+## _display "$SCRIPTNAME: nightly build via orchstration finished for modified salt from '${BRANCH_TAG} on Ubuntu 14.04"
 
 
 _display "$SCRIPTNAME: nightly build finished"

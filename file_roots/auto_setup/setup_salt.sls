@@ -75,8 +75,7 @@ build_apply_patch:
   file.patch:
     - name: {{base_cfg.build_salt_dir}}/salt/version.py
     - source: {{base_cfg.build_homedir}}/{{patch_file}}
-    - hash: md5=cdfdbe8ecdee482664c8345e1426d0b9
-
+    - hash: md5=99d152001f8e8cb56ad67849cd1e7064
 
 ## need to split the dotted version
 build_write_version_override:
