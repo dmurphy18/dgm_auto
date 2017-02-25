@@ -25,7 +25,7 @@ build_init_{{minion_platform}}:
   salt.state:
     - tgt: {{minion_tgt}}
     - sls:
-      - setup.{{minion_specific}}
+      - setup.{{minion_specific}} pillar='{"build_dest":"{{nb_destdir}}", "build_release":"{{minion_platform}}"}'
 
 
 build_bldressrv_rsakeys_{{minion_platform}}:
