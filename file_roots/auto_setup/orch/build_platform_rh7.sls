@@ -24,8 +24,11 @@ refresh_pillars_{{minion_platform}}:
 build_init_{{minion_platform}}:
   salt.state:
     - tgt: {{minion_tgt}}
+    - queue: True
     - sls:
       - setup.{{minion_specific}}
+    - require:
+      - salt: refresh_pillars_{{minion_platform}}
 
 
 build_bldressrv_rsakeys_{{minion_platform}}:
@@ -45,12 +48,17 @@ build_bldressrv_basedir_exists_{{minion_platform}}:
         user: {{base_cfg.minion_bldressrv_username}}
         group: www-data
         mode: 775
+    - require:
+      - salt: build_bldressrv_rsakeys_{{minion_platform}}
 
 
 build_highstate_{{minion_platform}}:
   salt.state:
     - tgt: {{minion_tgt}}
+    - queue: True
     - highstate: True
+    - require:
+      - salt: build_init_{{minion_platform}}
 
 
 sign_packages_{{minion_platform}}:
