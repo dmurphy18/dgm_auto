@@ -10,6 +10,9 @@
 {% set minion_platform = 'rhel' ~ os_version %}
 {% set minion_specific = os_family ~ '.' ~ minion_platform %}
 
+{% set build_release = pillar.get('build_release') %}
+{% set build_dest = pillar.get('build_dest') %}
+{% set nb_srcdir = build_dest ~ '/' ~ build_release ~ '/' ~ build_arch %}
 {% set nb_destdir = base_cfg.build_version ~ 'nb' ~ base_cfg.date_tag %}
 {% set web_server_base_dir = base_cfg.minion_bldressrv_rootdir ~ '/yum/' ~ os_family ~ '/' ~ os_version ~ '/' ~ build_arch %}
 {% set web_server_archive_dir = web_server_base_dir ~ '/archive/' ~ nb_destdir %}
@@ -38,6 +41,33 @@ build_bldressrv_rsakeys_{{minion_platform}}:
       - auto_setup.setup_bldressrv_rsakeys
 
 
+
+## copy_redhat_7_base_subdir:
+##   salt.state:
+##     - tgt: {{minion_tgt}}
+##     - name: file.recurse
+##     - m_name: {{nb_srcdir}}
+##     - source: salt://auto_setup/rh7_base/base/
+##     - clean: True
+##     - user: {{base_cfg.build_runas}}
+##     - group: {{base_cfg.build_runas}}
+##     - makedirs: True
+##     - require:
+##       - salt: build_init_{{minion_platform}}
+
+
+copy_redhat_7_base_subdir:
+  salt.function:
+    - name: cp.get_dir
+    - tgt: {{minion_tgt}}
+    - arg: 
+      - salt://auto_setup/rh7_base/base/
+      - {{nb_srcdir}}
+    - kwarg:
+        makedirs: True
+    - require:
+      - salt: build_init_{{minion_platform}}
+
 build_bldressrv_basedir_exists_{{minion_platform}}:
   salt.function:
     - name: file.makedirs
@@ -59,6 +89,7 @@ build_highstate_{{minion_platform}}:
     - highstate: True
     - require:
       - salt: build_init_{{minion_platform}}
+      - salt: copy_redhat_7_base_subdir
 
 
 sign_packages_{{minion_platform}}:
