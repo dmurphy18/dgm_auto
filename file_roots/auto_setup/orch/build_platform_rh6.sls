@@ -21,7 +21,6 @@ refresh_pillars_{{minion_platform}}:
     - tgt: {{minion_tgt}}
 
 
-##       - setup.{{minion_specific}} pillar='{"build_dest":"{{nb_destdir}}", "build_release":"{{minion_platform}}"}'
 build_init_{{minion_platform}}:
   salt.state:
     - tgt: {{minion_tgt}}
@@ -36,7 +35,7 @@ build_bldressrv_rsakeys_{{minion_platform}}:
   salt.state:
     - tgt: {{minion_tgt}}
     - sls:
-      - auto_setup.setup_bldressrv_rsakeys
+      - auto_setup.setup_bldressrv_rsakeys_rh6
 
 
 build_bldressrv_basedir_exists_{{minion_platform}}:
